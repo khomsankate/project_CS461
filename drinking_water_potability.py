@@ -1,9 +1,8 @@
 import streamlit as st
 import pandas as pd
-from tensorflow.keras.models import load_model
-
-# โหลดโมเดล
-model = load_model('path_to_your_model.h5')  # แทน 'path_to_your_model.h5' ด้วยที่อยู่ของไฟล์โมเดลของคุณ
+# load Model
+from keras.models import load_model
+model = load_model('example_model.h5')
 
 # สร้างฟังก์ชันสำหรับทำนาย
 def predict_water_potability(ph, hardness, solids, chloramines, sulfate, conductivity, organic_carbon, trihalomethanes, turbidity):
@@ -44,8 +43,22 @@ def main():
 
     # ทำนาย
     if st.button("Predict"):
-        result = predict_water_potability(ph, hardness, solids, chloramines, sulfate, conductivity, organic_carbon, trihalomethanes, turbidity)
-        st.success(f"The predicted water potability is: {result}")
+        data = {
+        'ph': [ph],
+        'Hardness': [hardness],
+        'Solids': [solids],
+        'Chloramines': [chloramines],
+        'Sulfate': [sulfate],
+        'Conductivity': [conductivity],
+        'Organic_carbon': [organic_carbon],
+        'Trihalomethanes': [trihalomethanes],
+        'Turbidity': [turbidity]
+        }
+        df = pd.DataFrame(data)
+
+        # ทำนาย
+        prediction = model.predict(df)
+        st.success(f"The predicted water potability is: {prediction[0][0]}")
 
 # เรียกใช้ฟังก์ชัน main()
 if __name__ == "__main__":
